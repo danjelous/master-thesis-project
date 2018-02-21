@@ -3,10 +3,14 @@
 </head>
 
 <body>
+  {{> root}}
+</body>
+
+<template name="root">
   <h1>Welcome to Meteor!</h1>
 
   {{> hello}} {{> info}}
-</body>
+</template>
 
 <template name="hello">
   <button>Click Me</button>
