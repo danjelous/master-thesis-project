@@ -7,9 +7,12 @@
 </body>
 
 <template name="root">
-  <h1>Welcome to Meteor!</h1>
 
-  {{> hello}} {{> info}}
+  <h1>StartupEvents:</h1>
+  {{#each startupEvents}}
+    <p>{{event}}</p>
+    <p>{{origin}}</p>
+  {{/each}}
 </template>
 
 <template name="hello">
