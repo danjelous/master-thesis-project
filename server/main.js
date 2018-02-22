@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { Random } from 'meteor/random';
 
 // code to run on server at startup
 Meteor.startup(() => {
@@ -6,28 +7,8 @@ Meteor.startup(() => {
 });
 
 Meteor.methods({
-  'getUserID'() {
-
-    let A = {
-      'id': 'A',
-      'isAvailable': true
-    }
-
-    let B = {
-      'id': 'B',
-      'isAvailable': true
-    }
-
-    if (A.isAvailable) {
-      A.isAvailable = false;
-      return A;
-    } else if (B.isAvailable) {
-      B.isAvailable = false;
-      return B;
-    } else {
-      return { 'id': 'X' };
-    }
-
+  'getUserId'() {
+    return { 'id': Random.hexString(10) };
   }
 });
 

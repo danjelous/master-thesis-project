@@ -5,16 +5,21 @@ import { Session } from 'meteor/session';
 
 import './main.html';
 
-Session.set('userID', '');
-
 Meteor.startup(() => {
-  Meteor.call('getUserID', (err, res) => {
-    if (err) {
-      console.log(`Error: ${err}`);
-    } else {
-      Session.set('userID', res.id);
-    }
-  });
+
+
+  if (!Session.get('userId')) {
+
+    Meteor.call('getUserId', (err, res) => {
+      if (err) {
+        console.log(`Error: ${err}`);
+      } else {
+        // SetPersistent stores value in localstorage
+        // So if you want a new ID (foreverwhat reason) clear that
+        Session.setPersistent('userId', res.id);
+      }
+    });
+  }
 
   Meteor.call('clearAllCollections');
   Meteor.subscribe('click-events');
@@ -25,7 +30,7 @@ Template.root.events({
     event.preventDefault();
 
     ClickEvents.insert({
-      'origin': userID,
+      'origin': Session.get('userID'),
       'event': {
         'pageX': event.pageX,
         'pageY': event.pageY,
