@@ -10,12 +10,12 @@
   <div class="container">
 
     <h1>Testing Distributed Click Events</h1>
-    <p>UserID: {{ userID }}</p>
+    <p>UserId: {{ userId }}</p>
     <br>
     <div class="results">
       {{#each clickEvents}}
         <h5>Origin:
-          <br> User: {{origin}}
+          <br>UserId {{origin}}
         </h5>
         <h5>Data:
           <br>Type: {{event.type}}

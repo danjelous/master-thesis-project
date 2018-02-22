@@ -4,22 +4,29 @@ import { Meteor } from 'meteor/meteor';
 import { Session } from 'meteor/session';
 
 import './main.html';
+import './util/initUser';
 
 Meteor.startup(() => {
 
+  // Initial value
+  let userId = getLocalStorageVar('userId');
 
-  if (!Session.get('userId')) {
+  // Get a new id if there is none
+  if (userId == null) {
 
     Meteor.call('getUserId', (err, res) => {
       if (err) {
-        console.log(`Error: ${err}`);
+        console.log(`Error: ${err} `);
       } else {
-        // SetPersistent stores value in localstorage
-        // So if you want a new ID (foreverwhat reason) clear that
-        Session.setPersistent('userId', res.id);
+        // Store the new userId in the LS if the client gets refreshed, loses
+        // connection etc, use session for the rest of the app
+        setLocalStorageVar('userId', res.id);
+        userId = res.id;
+        console.log(`set user id to ${res.id}`);
       }
     });
   }
+  Session.set('userId', userId);
 
   Meteor.call('clearAllCollections');
   Meteor.subscribe('click-events');
@@ -30,7 +37,7 @@ Template.root.events({
     event.preventDefault();
 
     ClickEvents.insert({
-      'origin': Session.get('userID'),
+      'origin': getLocalStorageVar('userId'),
       'event': {
         'pageX': event.pageX,
         'pageY': event.pageY,
@@ -44,7 +51,7 @@ Template.root.helpers({
   clickEvents: () => {
     return ClickEvents.find({});
   },
-  userID: () => {
-    return Session.get('userID');
+  userId: () => {
+    return Session.get('userId');
   }
 });
