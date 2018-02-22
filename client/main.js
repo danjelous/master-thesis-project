@@ -45,6 +45,9 @@ Template.root.events({
   },
   'click .btn--clear': (event) => {
     Meteor.call('clearAllCollections');
+  },
+  'touchstart .btn--clear': (event) => {
+    Meteor.call('clearAllCollections');
   }
 });
 
