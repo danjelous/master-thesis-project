@@ -37,7 +37,7 @@ Template.root.events({
     event.preventDefault();
 
     ClickEvents.insert({
-      'origin': Session.get('userId'),
+      'userId': Session.get('userId'),
       'event': {
         'pageX': event.pageX,
         'pageY': event.pageY,
@@ -50,6 +50,16 @@ Template.root.events({
 Template.root.helpers({
   clickEvents: () => {
     return ClickEvents.find({});
+  },
+  myClickEvents: () => {
+    return ClickEvents.find({ 'userId': Session.get('userId') });
+  },
+  othersClickEvents: () => {
+    return ClickEvents.find({
+      'userId': {
+        $ne: Session.get('userId')
+      }
+    });
   },
   userId: () => {
     return Session.get('userId');

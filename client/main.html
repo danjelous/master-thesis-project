@@ -10,20 +10,32 @@
   <div class="container">
 
     <h1>Testing Distributed Click Events</h1>
-    <p>UserId: {{ userId }}</p>
+    <p>My UserId: {{ userId }}</p>
     <br>
-    <div class="results">
-      {{#each clickEvents}}
-        <h5>Origin:
-          <br>UserId {{origin}}
-        </h5>
-        <h5>Data:
-          <br>Type: {{event.type}}
-          <br>pageX: {{event.pageX}}
-          <br>pageY: {{event.pageY}}
-        </h5>
-        <p>---------------------</p>
-      {{/each}}
+    <div class="results row">
+      <div class="col-sm-4">
+        <h4>All ClickEvents</h4>
+        {{#each clickEvents}}
+          <h5>User {{userId}} clicked on ( {{event.pageX}} | {{event.pageY}} )</h5>
+        {{/each}}
+      </div>
+
+      <div class="col-sm-4">
+        <h4>My ClickEvents</h4>
+        {{#each myClickEvents}}
+          <h5>I clicked on ( {{event.pageX}} | {{event.pageY}} )</h5>
+        {{/each}}
+      </div>
+
+      <div class="col-sm-4">
+        <h4>Other User's ClickEvents</h4>
+        {{#each othersClickEvents}}
+          <h5>User {{userId}} clicked on ( {{event.pageX}} | {{event.pageY}} )</h5>
+        {{/each}}
+      </div>
+
+
+
     </div>
 
   </div>
