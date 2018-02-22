@@ -37,7 +37,7 @@ Template.root.events({
     event.preventDefault();
 
     ClickEvents.insert({
-      'origin': getLocalStorageVar('userId'),
+      'origin': Session.get('userId'),
       'event': {
         'pageX': event.pageX,
         'pageY': event.pageY,
