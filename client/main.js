@@ -1,35 +1,45 @@
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Meteor } from 'meteor/meteor';
+import { Session } from 'meteor/session';
 
 import './main.html';
 
-const userID = 'A';
+Session.set('userID', '');
+
+Meteor.startup(() => {
+  Meteor.call('getUserID', (err, res) => {
+    if (err) {
+      console.log(`Error: ${err}`);
+    } else {
+      Session.set('userID', res.id);
+    }
+  });
+
+  Meteor.call('clearAllCollections');
+  Meteor.subscribe('click-events');
+});
 
 Template.root.events({
   'click': (event) => {
-    console.log('click on client happened');
+    event.preventDefault();
 
-    // Events.insert({
-    //   'event': 'click',
-    //   'origin': userID,
-    //   'object': event
-    // });
-
-    // And this line is querying it
-    // const todo = Events.findOne({ _id: 1 });
-    // So this happens right away!
-    //console.log(todo);
-
+    ClickEvents.insert({
+      'origin': userID,
+      'event': {
+        'pageX': event.pageX,
+        'pageY': event.pageY,
+        'type': event.type
+      }
+    });
   }
 });
 
 Template.root.helpers({
-  startupEvents: () => {
-    console.log('updated startup event');
-    console.log(StartupEvents.findOne({}));
-    return StartupEvents.find({});
+  clickEvents: () => {
+    return ClickEvents.find({});
+  },
+  userID: () => {
+    return Session.get('userID');
   }
 });
-
-Meteor.subscribe('startup-events', );

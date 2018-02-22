@@ -1,5 +1,5 @@
 Meteor.publish('click-events', () => {
-   console.log('publish server');
+   console.log('publish click event');
    return ClickEvents.find();
 });
 

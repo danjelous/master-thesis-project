@@ -8,10 +8,17 @@
 
 <template name="root">
 
-  <h1>StartupEvents:</h1>
-  {{#each startupEvents}}
-    <p>{{event}}</p>
-    <p>{{origin}}</p>
+  <p>UserID: {{ userID }}</p>
+  <h1>Click Events:</h1>
+  {{#each clickEvents}}
+    <p>origin:
+      <br>User {{origin}}</p>
+    <br>
+
+    <p>data:</p>
+    <p>{{event.type}}</p>
+    <p>{{event.pageX}}</p>
+    <p>{{event.pageY}}</p>
   {{/each}}
 </template>
 
