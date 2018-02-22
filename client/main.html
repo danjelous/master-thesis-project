@@ -19,7 +19,7 @@
       <div class="col-md-4">
         <h4>All ClickEvents</h4>
         {{#each allClickEvents}}
-          <h5>User {{userId}} clicked on ( {{event.pageX}} | {{event.pageY}} )</h5>
+          <h5>User {{origin}} clicked on ( {{event.pageX}} | {{event.pageY}} )</h5>
         {{/each}}
       </div>
 
@@ -33,7 +33,7 @@
       <div class="col-md-4">
         <h4>Other User's ClickEvents</h4>
         {{#each othersClickEvents}}
-          <h5>User {{userId}} clicked on ( {{event.pageX}} | {{event.pageY}} )</h5>
+          <h5>User {{origin}} clicked on ( {{event.pageX}} | {{event.pageY}} )</h5>
         {{/each}}
       </div>
     </div>
