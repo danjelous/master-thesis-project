@@ -33,7 +33,7 @@ Meteor.startup(() => {
 });
 
 Template.root.events({
-  'click': (event) => {
+  'click, touchstart': (event) => {
     event.preventDefault();
 
     ClickEvents.insert({
