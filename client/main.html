@@ -10,57 +10,32 @@
   <div class="container">
 
     <h1>Testing Distributed Click Events</h1>
+    <h2>Just click anywhere..</h2>
     <p>My UserId: {{ userId }}</p>
     <br>
+    <button class="btn btn-info btn--clear">Clear Log</button>
     <div class="results row">
-      <div class="col-sm-4">
+      <div class="col-md-4">
         <h4>All ClickEvents</h4>
-        {{#each clickEvents}}
+        {{#each allClickEvents}}
           <h5>User {{userId}} clicked on ( {{event.pageX}} | {{event.pageY}} )</h5>
         {{/each}}
       </div>
 
-      <div class="col-sm-4">
+      <div class="col-md-4">
         <h4>My ClickEvents</h4>
         {{#each myClickEvents}}
           <h5>I clicked on ( {{event.pageX}} | {{event.pageY}} )</h5>
         {{/each}}
       </div>
 
-      <div class="col-sm-4">
+      <div class="col-md-4">
         <h4>Other User's ClickEvents</h4>
         {{#each othersClickEvents}}
           <h5>User {{userId}} clicked on ( {{event.pageX}} | {{event.pageY}} )</h5>
         {{/each}}
       </div>
-
-
-
     </div>
 
   </div>
-</template>
-
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
-  <p>Test Github CI</p>
-</template>
-
-<template name="info">
-  <h2>Learn Meteor!</h2>
-  <ul>
-    <li>
-      <a href="https://www.meteor.com/try" target="_blank">Do the Tutorial</a>
-    </li>
-    <li>
-      <a href="http://guide.meteor.com" target="_blank">Follow the Guide</a>
-    </li>
-    <li>
-      <a href="https://docs.meteor.com" target="_blank">Read the Docs</a>
-    </li>
-    <li>
-      <a href="https://forums.meteor.com" target="_blank">Discussions</a>
-    </li>
-  </ul>
 </template>

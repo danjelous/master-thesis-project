@@ -27,8 +27,6 @@ Meteor.startup(() => {
     });
   }
   Session.set('userId', userId);
-
-  Meteor.call('clearAllCollections');
   Meteor.subscribe('click-events');
 });
 
@@ -44,11 +42,14 @@ Template.root.events({
         'type': event.type
       }
     });
+  },
+  'click .btn--clear': (event) => {
+    Meteor.call('clearAllCollections');
   }
 });
 
 Template.root.helpers({
-  clickEvents: () => {
+  allClickEvents: () => {
     return ClickEvents.find({});
   },
   myClickEvents: () => {
