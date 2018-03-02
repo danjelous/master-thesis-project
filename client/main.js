@@ -31,22 +31,26 @@ Meteor.startup(() => {
 });
 
 Template.root.events({
-  'click, touchstart': (event) => {
-    event.preventDefault();
+  'click': event => {
+
+    // Clone only values, as the original event contains circular objects
+    let newObj = {};
+    for (let prop in event) {
+      let val = event[prop];
+      if (typeof val != 'object' && typeof val != 'function') {
+        newObj[prop] = val;
+      }
+    }
 
     ClickEvents.insert({
       'origin': Session.get('userId'),
-      'event': {
-        'pageX': event.pageX,
-        'pageY': event.pageY,
-        'type': event.type
-      }
+      'event': newObj
     });
   },
-  'click .btn--clear': (event) => {
+  'click .btn--clear': () => {
     Meteor.call('clearAllCollections');
   },
-  'touchstart .btn--clear': (event) => {
+  'touchstart .btn--clear': () => {
     Meteor.call('clearAllCollections');
   }
 });

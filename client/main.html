@@ -9,34 +9,39 @@
 
 <template name="root">
   <div class="container">
+    <!-- HammerTouchArea start tag below -->
+    {{#HammerTouchArea gestureMap=myGestures}}
+      <!-- Gestures on HTML in here will register in your gestureMap. See below. -->
 
-    <h1>Testing Distributed Click Events</h1>
-    <h2>Just click anywhere..</h2>
-    <p>My UserId: {{ userId }}</p>
-    <br>
-    <button class="btn btn-info btn--clear">Clear Log</button>
-    <div class="results row">
-      <div class="col-md-4">
-        <h4>All ClickEvents</h4>
-        {{#each allClickEvents}}
-          <h5>User {{origin}} clicked on ( {{event.pageX}} | {{event.pageY}} )</h5>
-        {{/each}}
+      <h1>Testing Distributed Click Events</h1>
+      <h2>Just click anywhere..</h2>
+      <p>My UserId: {{ userId }}</p>
+      <br>
+      <button class="btn btn-info btn--clear">Clear Log</button>
+      <div class="results row">
+        <div class="col-md-4">
+          <h4>All ClickEvents</h4>
+          {{#each allClickEvents}}
+            <h5>User {{origin}} clicked on ( {{event.pageX}} | {{event.pageY}} )</h5>
+          {{/each}}
+        </div>
+
+        <div class="col-md-4">
+          <h4>My ClickEvents</h4>
+          {{#each myClickEvents}}
+            <h5>I clicked on ( {{event.pageX}} | {{event.pageY}} )</h5>
+          {{/each}}
+        </div>
+
+        <div class="col-md-4">
+          <h4>Other User's ClickEvents</h4>
+          {{#each othersClickEvents}}
+            <h5>User {{origin}} clicked on ( {{event.pageX}} | {{event.pageY}} )</h5>
+          {{/each}}
+        </div>
       </div>
 
-      <div class="col-md-4">
-        <h4>My ClickEvents</h4>
-        {{#each myClickEvents}}
-          <h5>I clicked on ( {{event.pageX}} | {{event.pageY}} )</h5>
-        {{/each}}
-      </div>
-
-      <div class="col-md-4">
-        <h4>Other User's ClickEvents</h4>
-        {{#each othersClickEvents}}
-          <h5>User {{origin}} clicked on ( {{event.pageX}} | {{event.pageY}} )</h5>
-        {{/each}}
-      </div>
-    </div>
-
+    {{/HammerTouchArea}}
+    <!-- HammerTouchArea end tag above -->
   </div>
 </template>
