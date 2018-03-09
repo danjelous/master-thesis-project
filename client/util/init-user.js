@@ -1,4 +1,4 @@
-getLocalStorageVar = name => {
+getLocalStorageVar = (name) => {
    return window.localStorage.getItem(name);
 };
 
