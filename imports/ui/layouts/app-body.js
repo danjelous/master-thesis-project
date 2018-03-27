@@ -8,15 +8,25 @@ import './app-body.html';
 
 Template.App_Body.onCreated(function () {
 
-   // Set userId
-   Session.set('userId', window.localStorage.getItem('userId'));
-
    // Subscribe to events
    Meteor.subscribe('click-events');
 });
 
 Template.App_Body.events({
    'click': e => {
+      console.log(Session.get('userId'));
+      /**
+       * Check possible ghost click.
+       * Ghost clicks are triggered after a tap and in this use case not
+       * wanted as they act as a duplicated event.
+       */
+      let potentialTap = Session.get('tapHappened');
+      const userId = Session.get('userId');
+
+      if (potentialTap && userId === potentialTap) {
+         delete Session.keys['tapHappened'];
+         return;
+      }
 
       ClickEvents.insert({
          'origin': Session.get('userId'),
@@ -44,8 +54,12 @@ Template.App_Body.helpers({
             return;
          }
 
+         // Prevent ghost clicks
+         const userId = Session.get('userId');
+         Session.set('tapHappened', userId);
+
          ClickEvents.insert({
-            'origin': Session.get('userId'),
+            'origin': userId,
             'event': {
                'x': e.center.x,
                'y': e.center.y,
