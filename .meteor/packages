@@ -22,3 +22,5 @@ fourseven:scss
 session
 twbs:bootstrap
 chriswessels:hammer
+kadira:flow-router
+kadira:blaze-layout
