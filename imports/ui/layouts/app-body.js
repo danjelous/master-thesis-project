@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { Session } from 'meteor/session';
 
 import { ClickEvents } from '../../api/clicks/clickEvents.js';
+import { SwipeEvents } from '../../api/swipes/swipeEvents.js';
 
 import './app-body.html';
 
@@ -10,11 +11,12 @@ Template.App_Body.onCreated(function () {
 
    // Subscribe to events
    Meteor.subscribe('click-events');
+   Meteor.subscribe('swipe-events');
 });
 
 Template.App_Body.events({
    'click': e => {
-      console.log(Session.get('userId'));
+
       /**
        * Check possible ghost click.
        * Ghost clicks are triggered after a tap and in this use case not
@@ -38,13 +40,13 @@ Template.App_Body.events({
       });
    },
    'click .btn--clear': () => {
-      Meteor.call('clickEvents.removeAll');
+      Meteor.call('clearCollections');
    }
 });
 
 Template.App_Body.helpers({
    templateGestures: {
-      'tap *': (e, t) => {
+      'tap *': (e) => {
 
          /**
           *  Hammer.js interprets a very short click as a 'tap'. In this 
@@ -69,7 +71,25 @@ Template.App_Body.helpers({
 
       },
       'tap .btn--clear': () => {
-         Meteor.call('clickEvents.removeAll');
+         Meteor.call('clearCollections');
+      },
+      'swipeleft *, swiperight *': (e) => {
+
+         /***
+          * Only support left and right swipes as vertical 
+          * events resign to scroll behaviour. */
+         let targetSelector = (String)(e.target.nodeName).toLowerCase();
+         targetSelector += (e.target.id) ? `#${e.target.id}` : '';
+         targetSelector += (e.target.className) ? `.${e.target.className}` : '';
+
+         SwipeEvents.insert({
+            'origin': Session.get('userId'),
+            'event': {
+               'type': 'swipe',
+               'direction': e.type,
+               'target': targetSelector
+            }
+         });
       }
    },
    allClickEvents: () => {
@@ -80,6 +100,19 @@ Template.App_Body.helpers({
    },
    othersClickEvents: () => {
       return ClickEvents.find({
+         'origin': {
+            $ne: Session.get('userId')
+         }
+      });
+   },
+   allSwipeEvents: () => {
+      return SwipeEvents.find({});
+   },
+   mySwipeEvents: () => {
+      return SwipeEvents.find({ 'origin': Session.get('userId') });
+   },
+   othersSwipeEvents: () => {
+      return SwipeEvents.find({
          'origin': {
             $ne: Session.get('userId')
          }

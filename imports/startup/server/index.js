@@ -1,6 +1,3 @@
-// Establish database state on server startup
-import './fixtures.js';
-
 // General methods
 import './methods.js';
 
