@@ -19,8 +19,3 @@ if (userId == null) {
     }
   });
 }
-
-Session.set('userId', userId);
-
-// TODO: Move to /ui --> app
-Meteor.subscribe('click-events');
