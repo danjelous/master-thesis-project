@@ -7,6 +7,8 @@ import { SwipeEvents } from '../../api/swipes/swipeEvents.js';
 
 import './app-body.html';
 
+const USER_ID = Session.get('userId');
+
 Template.App_Body.onCreated(function () {
 
    // Subscribe to events
@@ -23,21 +25,21 @@ Template.App_Body.events({
        * wanted as they act as a duplicated event.
        */
       let potentialTap = Session.get('tapHappened');
-      const userId = Session.get('userId');
 
-      if (potentialTap && userId === potentialTap) {
+      if (potentialTap && USER_ID === potentialTap) {
          delete Session.keys['tapHappened'];
          return;
       }
 
       ClickEvents.insert({
-         'origin': Session.get('userId'),
+         'origin': USER_ID,
          'event': {
             'x': e.pageX,
             'y': e.pageY,
             'type': 'click'
          }
       });
+
    },
    'click .btn--clear': () => {
       Meteor.call('clearCollections');
@@ -56,12 +58,10 @@ Template.App_Body.helpers({
             return;
          }
 
-         // Prevent ghost clicks
-         const userId = Session.get('userId');
-         Session.set('tapHappened', userId);
+         preventGhostClicks();
 
          ClickEvents.insert({
-            'origin': userId,
+            'origin': USER_ID,
             'event': {
                'x': e.center.x,
                'y': e.center.y,
@@ -75,6 +75,8 @@ Template.App_Body.helpers({
       },
       'swipeleft *, swiperight *': (e) => {
 
+         preventGhostClicks();
+
          /***
           * Only support left and right swipes as vertical 
           * events resign to scroll behaviour. */
@@ -83,7 +85,7 @@ Template.App_Body.helpers({
          targetSelector += (e.target.className) ? `.${e.target.className}` : '';
 
          SwipeEvents.insert({
-            'origin': Session.get('userId'),
+            'origin': USER_ID,
             'event': {
                'type': 'swipe',
                'direction': e.type,
@@ -96,12 +98,12 @@ Template.App_Body.helpers({
       return ClickEvents.find({});
    },
    myClickEvents: () => {
-      return ClickEvents.find({ 'origin': Session.get('userId') });
+      return ClickEvents.find({ 'origin': USER_ID });
    },
    othersClickEvents: () => {
       return ClickEvents.find({
          'origin': {
-            $ne: Session.get('userId')
+            $ne: USER_ID
          }
       });
    },
@@ -109,16 +111,20 @@ Template.App_Body.helpers({
       return SwipeEvents.find({});
    },
    mySwipeEvents: () => {
-      return SwipeEvents.find({ 'origin': Session.get('userId') });
+      return SwipeEvents.find({ 'origin': USER_ID });
    },
    othersSwipeEvents: () => {
       return SwipeEvents.find({
          'origin': {
-            $ne: Session.get('userId')
+            $ne: USER_ID
          }
       });
    },
    userId: () => {
-      return Session.get('userId');
+      return USER_ID;
    }
 });
+
+preventGhostClicks = () => {
+   Session.set('tapHappened', USER_ID);
+}

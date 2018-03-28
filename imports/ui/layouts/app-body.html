@@ -33,7 +33,7 @@
                <h4>All SwipeEvents</h4>
                {{#each allSwipeEvents}}
                   <h5>User {{origin}} made a {{event.direction}} on
-                     <pre>{{event.target}}</pre>
+                     <span class="code">{{event.target}}</span>
                   </h5>
                {{/each}}
             </div>
@@ -42,7 +42,7 @@
                <h4>My SwipeEvents</h4>
                {{#each mySwipeEvents}}
                   <h5>I made a {{event.direction}} on
-                     <pre>{{event.target}}</pre>
+                     <span class="code">{{event.target}}</span>
                   </h5>
                {{/each}}
             </div>
@@ -51,7 +51,7 @@
                <h4>Other User's SwipeEvents</h4>
                {{#each othersSwipeEvents}}
                   <h5>User {{origin}} made a {{event.direction}} on
-                     <pre>{{event.target}}</pre>
+                     <span class="code">{{event.target}}</span>
                   </h5>
                {{/each}}
             </div>
