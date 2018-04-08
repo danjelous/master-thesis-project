@@ -16,3 +16,7 @@ Meteor.publish('click-events', () => {
 Meteor.publish('press-events', () => {
    return Events.find({ type: 'press' });
 });
+
+Meteor.publish('pan-events', () => {
+   return Events.find({ $or: [{ type: 'panleft' }, { type: 'panright' }] });
+});

@@ -11,6 +11,8 @@ Template.App_Body.onCreated(() => {
    // Subscribe to specific events
    // Meteor.subscribe('click-events');
    // Meteor.subscribe('swipe-events');
+   // Meteor.subscribe('press-events');
+   // Meteor.subscribe('pan-events');
 
    // Subscribe to all events
    Meteor.subscribe('all-events');
@@ -74,8 +76,12 @@ Template.App_Body.helpers({
          Meteor.call('clearCollections');
       },
       'swipeleft *, swiperight *': (e) => {
-
          preventGhostClicks();
+
+         /**
+          * Similar to ghost clicks, a swipeleft is also a (fast) panleft. To suppress
+          * this behaviour the same behaviour as in prevenGhostClicks is used. */
+         preventPanRecognise();
 
          /***
           * Only support left and right swipes as vertical
@@ -89,6 +95,42 @@ Template.App_Body.helpers({
             'type': e.type,
             'event': {
                'target': targetSelector
+            }
+         });
+      },
+      'panend *': (e) => {
+
+         // Above threshold?
+         const PAN_THRESHOLD = 20;
+         if (Math.abs(e.deltaX) <= PAN_THRESHOLD) {
+            return;
+         }
+
+         // Has a swipe happened?
+         let potentialSwipe = Session.get('swipeHappened');
+         if (potentialSwipe && Session.get('userId') === potentialSwipe) {
+            delete Session.keys['swipeHappened'];
+            return;
+         }
+
+         preventGhostClicks();
+
+         // Determine direction
+         let direction = (e.deltaX < 0) ? 'panleft' : 'panright';
+
+         Events.insert({
+            'origin': Session.get('userId'),
+            'type': direction,
+            'event': {
+               'start': {
+                  'x': e.center.x - e.deltaX,
+                  'y': e.center.y - e.deltaY
+               },
+               'end': {
+                  'x': e.center.x,
+                  'y': e.center.y
+               },
+               'duration': e.deltaTime
             }
          });
       },
@@ -120,9 +162,14 @@ Template.App_Body.helpers({
    },
    getEventData: (event) => {
       if (event.type === 'tap' || event.type === 'click' || event.type === 'press') {
-         return `( ${event.event.x} | ${event.event.y} )`;
+         return `on (${event.event.x}|${event.event.y})`;
       } else if (event.type.indexOf('swipe') > -1) {
-         return `<span class="code">${event.event.target}</span>`;
+         return `on <span class="code">${event.event.target}</span>`;
+      } else if (event.type.indexOf('pan') > -1) {
+         return `from
+            (${event.event.start.x}|${event.event.start.y}) to
+            (${event.event.end.x}|${event.event.end.y}) in
+            ${event.event.duration}ms`;
       }
    },
    userId: () => {
@@ -137,4 +184,11 @@ Template.App_Body.helpers({
  */
 preventGhostClicks = () => {
    Session.set('tapHappened', Session.get('userId'));
+}
+
+/**
+ * Similar to ghostClicks, but with swipe and pan behaviour.
+ */
+preventPanRecognise = () => {
+   Session.set('swipeHappened', Session.get('userId'));
 }
