@@ -1,1 +1,0 @@
-export const ClickEvents = new Mongo.Collection('click-events');

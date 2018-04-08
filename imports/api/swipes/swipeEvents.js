@@ -1,1 +1,0 @@
-export const SwipeEvents = new Mongo.Collection('swipe-events');

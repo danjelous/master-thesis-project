@@ -2,18 +2,20 @@ import { Template } from 'meteor/templating';
 import { Meteor } from 'meteor/meteor';
 import { Session } from 'meteor/session';
 
-import { ClickEvents } from '../../api/clicks/clickEvents.js';
-import { SwipeEvents } from '../../api/swipes/swipeEvents.js';
+import { Events } from '../../api/events/events.js';
 
 import './app-body.html';
 
 const USER_ID = Session.get('userId');
 
-Template.App_Body.onCreated(function () {
+Template.App_Body.onCreated(() => {
 
-   // Subscribe to events
-   Meteor.subscribe('click-events');
-   Meteor.subscribe('swipe-events');
+   // Subscribe to specific events
+   // Meteor.subscribe('click-events');
+   // Meteor.subscribe('swipe-events');
+
+   // Subscribe to all events
+   Meteor.subscribe('all-events');
 });
 
 Template.App_Body.events({
@@ -31,12 +33,12 @@ Template.App_Body.events({
          return;
       }
 
-      ClickEvents.insert({
+      Events.insert({
          'origin': USER_ID,
+         'type': 'click',
          'event': {
             'x': e.pageX,
             'y': e.pageY,
-            'type': 'click'
          }
       });
 
@@ -51,7 +53,7 @@ Template.App_Body.helpers({
       'tap *': (e) => {
 
          /**
-          *  Hammer.js interprets a very short click as a 'tap'. In this 
+          *  Hammer.js interprets a very short click as a 'tap'. In this
           * prototype refer to all taps from mobile devices as _actual_
           * taps, everything originating from a mouse is handled as a click. */
          if (e.pointerType === 'mouse') {
@@ -60,12 +62,12 @@ Template.App_Body.helpers({
 
          preventGhostClicks();
 
-         ClickEvents.insert({
+         Events.insert({
             'origin': USER_ID,
+            'type': 'tap',
             'event': {
                'x': e.center.x,
                'y': e.center.y,
-               'type': 'tap'
             }
          });
 
@@ -78,53 +80,51 @@ Template.App_Body.helpers({
          preventGhostClicks();
 
          /***
-          * Only support left and right swipes as vertical 
+          * Only support left and right swipes as vertical
           * events resign to scroll behaviour. */
          let targetSelector = (String)(e.target.nodeName).toLowerCase();
          targetSelector += (e.target.id) ? `#${e.target.id}` : '';
          targetSelector += (e.target.className) ? `.${e.target.className}` : '';
 
-         SwipeEvents.insert({
+         Events.insert({
             'origin': USER_ID,
+            'type': e.type,
             'event': {
-               'type': 'swipe',
-               'direction': e.type,
                'target': targetSelector
             }
          });
       }
    },
-   allClickEvents: () => {
-      return ClickEvents.find({});
+   allEvents: () => {
+      return Events.find({});
    },
-   myClickEvents: () => {
-      return ClickEvents.find({ 'origin': USER_ID });
+   myEvents: () => {
+      return Events.find({ 'origin': USER_ID });
    },
-   othersClickEvents: () => {
-      return ClickEvents.find({
+   othersEvents: () => {
+      return Events.find({
          'origin': {
             $ne: USER_ID
          }
       });
    },
-   allSwipeEvents: () => {
-      return SwipeEvents.find({});
-   },
-   mySwipeEvents: () => {
-      return SwipeEvents.find({ 'origin': USER_ID });
-   },
-   othersSwipeEvents: () => {
-      return SwipeEvents.find({
-         'origin': {
-            $ne: USER_ID
-         }
-      });
+   getEventData: (event) => {
+      if (event.type === 'tap' || event.type === 'click') {
+         return `( ${event.event.x} | ${event.event.y} )`;
+      } else if (event.type.indexOf('swipe') > -1) {
+         return `<span class="code">${event.event.target}</span>`;
+      }
    },
    userId: () => {
       return USER_ID;
    }
 });
 
+/**
+ * Set a variable after each touch event.
+ * If there is a touch AND click interaction from the same userId
+ * nearly simulatneously (~10ms) a ghost click was detected.
+ */
 preventGhostClicks = () => {
    Session.set('tapHappened', USER_ID);
 }
