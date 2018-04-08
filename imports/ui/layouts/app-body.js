@@ -6,8 +6,6 @@ import { Events } from '../../api/events/events.js';
 
 import './app-body.html';
 
-const USER_ID = Session.get('userId');
-
 Template.App_Body.onCreated(() => {
 
    // Subscribe to specific events
@@ -28,13 +26,13 @@ Template.App_Body.events({
        */
       let potentialTap = Session.get('tapHappened');
 
-      if (potentialTap && USER_ID === potentialTap) {
+      if (potentialTap && Session.get('userId') === potentialTap) {
          delete Session.keys['tapHappened'];
          return;
       }
 
       Events.insert({
-         'origin': USER_ID,
+         'origin': Session.get('userId'),
          'type': 'click',
          'event': {
             'x': e.pageX,
@@ -63,7 +61,7 @@ Template.App_Body.helpers({
          preventGhostClicks();
 
          Events.insert({
-            'origin': USER_ID,
+            'origin': Session.get('userId'),
             'type': 'tap',
             'event': {
                'x': e.center.x,
@@ -87,10 +85,22 @@ Template.App_Body.helpers({
          targetSelector += (e.target.className) ? `.${e.target.className}` : '';
 
          Events.insert({
-            'origin': USER_ID,
+            'origin': Session.get('userId'),
             'type': e.type,
             'event': {
                'target': targetSelector
+            }
+         });
+      },
+      'press *': (e) => {
+         preventGhostClicks();
+
+         Events.insert({
+            'origin': Session.get('userId'),
+            'type': 'press',
+            'event': {
+               'x': e.center.x,
+               'y': e.center.y,
             }
          });
       }
@@ -99,24 +109,24 @@ Template.App_Body.helpers({
       return Events.find({});
    },
    myEvents: () => {
-      return Events.find({ 'origin': USER_ID });
+      return Events.find({ 'origin': Session.get('userId') });
    },
    othersEvents: () => {
       return Events.find({
          'origin': {
-            $ne: USER_ID
+            $ne: Session.get('userId')
          }
       });
    },
    getEventData: (event) => {
-      if (event.type === 'tap' || event.type === 'click') {
+      if (event.type === 'tap' || event.type === 'click' || event.type === 'press') {
          return `( ${event.event.x} | ${event.event.y} )`;
       } else if (event.type.indexOf('swipe') > -1) {
          return `<span class="code">${event.event.target}</span>`;
       }
    },
    userId: () => {
-      return USER_ID;
+      return Session.get('userId');
    }
 });
 
@@ -126,5 +136,5 @@ Template.App_Body.helpers({
  * nearly simulatneously (~10ms) a ghost click was detected.
  */
 preventGhostClicks = () => {
-   Session.set('tapHappened', USER_ID);
+   Session.set('tapHappened', Session.get('userId'));
 }

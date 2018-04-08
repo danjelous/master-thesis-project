@@ -12,3 +12,7 @@ Meteor.publish('swipe-events', () => {
 Meteor.publish('click-events', () => {
    return Events.find({ $or: [{ type: 'click' }, { type: 'tap' }] });
 });
+
+Meteor.publish('press-events', () => {
+   return Events.find({ type: 'press' });
+});
