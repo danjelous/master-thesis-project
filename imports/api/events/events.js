@@ -1,6 +1,3 @@
-import { Methods } from './methods.js';
-import { Session } from 'meteor/session';
-
 const Events = new Mongo.Collection('all-events');
 
 // Helper variables to store states
@@ -102,7 +99,7 @@ Events.insertPan = (e, userId) => {
    let direction = (e.deltaX < 0) ? 'panleft' : 'panright';
 
    Events.insert({
-      'origin': Session.get('userId'),
+      'origin': userId,
       'type': direction,
       'event': {
          'start': {
