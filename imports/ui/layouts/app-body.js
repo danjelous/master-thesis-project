@@ -17,33 +17,7 @@ Template.App_Body.onCreated(() => {
 
 Template.App_Body.events({
    'click': e => {
-
-      /**
-       * Check possible ghost click.
-       * Ghost clicks are triggered after a tap and in this use case not
-       * wanted as they act as a duplicated event.
-       */
-      let potentialTap = Session.get('tapHappened');
-
-      if (potentialTap && Session.get('userId') === potentialTap) {
-         delete Session.keys['tapHappened'];
-         return;
-      }
-
-      // EVents.insert({e});
-
-      // Refactor++
-      // Brunner.addClick(e, 1)
-
-      Events.insert({
-         'origin': Session.get('userId'),
-         'type': 'click',
-         'event': {
-            'x': e.pageX,
-            'y': e.pageY,
-         }
-      });
-
+      Events.insertClick(e, Session.get('userId'));
    },
    'click .btn--clear': () => {
       Meteor.call('clearCollections');
@@ -53,102 +27,19 @@ Template.App_Body.events({
 Template.App_Body.helpers({
    templateGestures: {
       'tap *': (e) => {
-
-         /**
-          *  Hammer.js interprets a very short click as a 'tap'. In this
-          * prototype refer to all taps from mobile devices as _actual_
-          * taps, everything originating from a mouse is handled as a click. */
-         if (e.pointerType === 'mouse') {
-            return;
-         }
-
-         Meteor.call('insertIntoSwipes', {})
-
-         preventGhostClicks();
-
-         Events.insert({
-            'origin': Session.get('userId'),
-            'type': 'tap',
-            'event': {
-               'x': e.center.x,
-               'y': e.center.y,
-            }
-         });
-
+         Events.insertTap(e, Session.get('userId'));
       },
       'tap .btn--clear': () => {
          Meteor.call('clearCollections');
       },
       'swipeleft *, swiperight *': (e) => {
-         preventGhostClicks();
-
-         /**
-          * Similar to ghost clicks, a swipeleft is also a (fast) panleft. To suppress
-          * this behaviour the same behaviour as in prevenGhostClicks is used. */
-         preventPanRecognise();
-
-         /***
-          * Only support left and right swipes as vertical
-          * events resign to scroll behaviour. */
-         let targetSelector = (String)(e.target.nodeName).toLowerCase();
-         targetSelector += (e.target.id) ? `#${e.target.id}` : '';
-         targetSelector += (e.target.className) ? `.${e.target.className}` : '';
-
-         Events.insert({
-            'origin': Session.get('userId'),
-            'type': e.type,
-            'event': {
-               'target': targetSelector
-            }
-         });
+         Events.insertSwipe(e, Session.get('userId'));
       },
       'panend *': (e) => {
-
-         // Above threshold?
-         const PAN_THRESHOLD = 20;
-         if (Math.abs(e.deltaX) <= PAN_THRESHOLD) {
-            return;
-         }
-
-         // Has a swipe happened?
-         let potentialSwipe = Session.get('swipeHappened');
-         if (potentialSwipe && Session.get('userId') === potentialSwipe) {
-            delete Session.keys['swipeHappened'];
-            return;
-         }
-
-         preventGhostClicks();
-
-         // Determine direction
-         let direction = (e.deltaX < 0) ? 'panleft' : 'panright';
-
-         Events.insert({
-            'origin': Session.get('userId'),
-            'type': direction,
-            'event': {
-               'start': {
-                  'x': e.center.x - e.deltaX,
-                  'y': e.center.y - e.deltaY
-               },
-               'end': {
-                  'x': e.center.x,
-                  'y': e.center.y
-               },
-               'duration': e.deltaTime
-            }
-         });
+         Events.insertPan(e, Session.get('userId'));
       },
       'press *': (e) => {
-         preventGhostClicks();
-
-         Events.insert({
-            'origin': Session.get('userId'),
-            'type': 'press',
-            'event': {
-               'x': e.center.x,
-               'y': e.center.y,
-            }
-         });
+         Events.insertPress(e, Session.get('userId'));
       }
    },
    allEvents: () => {
@@ -180,19 +71,3 @@ Template.App_Body.helpers({
       return Session.get('userId');
    }
 });
-
-/**
- * Set a variable after each touch event.
- * If there is a touch AND click interaction from the same userId
- * nearly simulatneously (~10ms) a ghost click was detected.
- */
-preventGhostClicks = () => {
-   Session.set('tapHappened', Session.get('userId'));
-}
-
-/**
- * Similar to ghostClicks, but with swipe and pan behaviour.
- */
-preventPanRecognise = () => {
-   Session.set('swipeHappened', Session.get('userId'));
-}
