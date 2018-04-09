@@ -9,13 +9,10 @@ import './app-body.html';
 Template.App_Body.onCreated(() => {
 
    // Subscribe to specific events
-   // Meteor.subscribe('click-events');
-   // Meteor.subscribe('swipe-events');
-   // Meteor.subscribe('press-events');
-   // Meteor.subscribe('pan-events');
+   // Events.subscribe('click press swipe');
 
    // Subscribe to all events
-   Meteor.subscribe('all-events');
+   Events.subscribe('all');
 });
 
 Template.App_Body.events({
@@ -32,6 +29,11 @@ Template.App_Body.events({
          delete Session.keys['tapHappened'];
          return;
       }
+
+      // EVents.insert({e});
+
+      // Refactor++
+      // Brunner.addClick(e, 1)
 
       Events.insert({
          'origin': Session.get('userId'),
@@ -59,6 +61,8 @@ Template.App_Body.helpers({
          if (e.pointerType === 'mouse') {
             return;
          }
+
+         Meteor.call('insertIntoSwipes', {})
 
          preventGhostClicks();
 
