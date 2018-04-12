@@ -1,3 +1,5 @@
+import { FlowRouter } from 'meteor/kadira:flow-router';
+
 import './landing.html';
 
 Template.Landing.events({
@@ -14,5 +16,13 @@ Template.Landing.events({
       } else {
          $('.connect-private__button').addClass('disabled');
       }
+   },
+   'click .connect-public__button': (e) => {
+      if ($(e.target).hasClass('disabled')) {
+         return;
+      }
+
+      // Forward to the visualisation
+      FlowRouter.go('/events-list');
    }
 })

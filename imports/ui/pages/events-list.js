@@ -4,9 +4,9 @@ import { Session } from 'meteor/session';
 
 import { Events } from '../../api/events/events.js';
 
-import './app-body.html';
+import './events-list.html';
 
-Template.App_Body.onCreated(() => {
+Template.Events_List.onCreated(() => {
 
    // Subscribe to specific events
    // Events.subscribe('click press swipe');
@@ -15,7 +15,7 @@ Template.App_Body.onCreated(() => {
    Events.subscribe('all');
 });
 
-Template.App_Body.events({
+Template.Events_List.events({
    'click': e => {
       Events.insertClick(e, Session.get('userId'));
    },
@@ -24,7 +24,7 @@ Template.App_Body.events({
    }
 });
 
-Template.App_Body.helpers({
+Template.Events_List.helpers({
    templateGestures: {
       'tap *': (e) => {
          Events.insertTap(e, Session.get('userId'));

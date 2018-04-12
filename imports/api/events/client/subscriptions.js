@@ -10,7 +10,6 @@ import { Events } from '../events.js';
 Events.subscribe = args => {
    let events = args.split(' ');
    events.forEach(event => {
-      console.log(event);
       Meteor.subscribe(`${event}-events`);
    });
 }
