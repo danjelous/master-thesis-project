@@ -18,3 +18,13 @@ FlowRouter.route('/events-list', {
       BlazeLayout.render('Events_List');
    },
 });
+
+FlowRouter.route('/canvas', {
+   name: 'Canvas',
+   action() {
+      BlazeLayout.render('Canvas');
+   },
+});
+
+const DefinedRoutes = ['/', '/events-list', '/canvas'];
+export { DefinedRoutes };

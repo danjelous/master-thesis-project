@@ -8,7 +8,7 @@
          <div class="col-md-4">
             <select class="form-control connect-public__options">
                <option value=""></option>
-               <option value="events">Events</option>
+               <option value="events-list">Events List</option>
             </select>
          </div>
          <div class="col-md-2">
@@ -24,6 +24,10 @@
          </div>
          <div class="col-md-4">
             <input type="text" class="form-control connect-private__space-id" placeholder="SpaceID" />
+            <div class="alert alert-danger connect-private__alert hidden">
+               <strong>Error!</strong>
+               <br> The chosen SpaceID does not exist!
+            </div>
          </div>
          <div class="col-md-2">
             <button class="disabled btn btn-primary btn-lg connect-private__button">Connect</button>

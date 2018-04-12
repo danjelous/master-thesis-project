@@ -1,4 +1,5 @@
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import { DefinedRoutes } from '../../startup/client/routes.js';
 
 import './landing.html';
 
@@ -18,11 +19,27 @@ Template.Landing.events({
       }
    },
    'click .connect-public__button': (e) => {
-      if ($(e.target).hasClass('disabled')) {
-         return;
-      }
+      if ($(e.target).hasClass('disabled')) return;
 
       // Forward to the visualisation
-      FlowRouter.go('/events-list');
+      FlowRouter.go(`/${$('.connect-public__options').val()}`);
+   },
+   'click .connect-private__button': (e) => {
+      if ($(e.target).hasClass('disabled')) return;
+
+      const targetSpace = $('.connect-private__space-id');
+
+      // Check if the space exists
+      DefinedRoutes.forEach(route => {
+         if (route === `/${targetSpace.val()}`) {
+
+            // Forward to the space
+            FlowRouter.go(`/${targetSpace.val()}`);
+         }
+      });
+
+      // No defined space found
+      $('.connect-private__alert').removeClass('hidden');
+      $('.connect-private__space-id').focus();
    }
-})
+});
