@@ -4,6 +4,7 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 // Import to load these templates
 import '../../ui/pages/events-list.js';
 import '../../ui/pages/landing.js';
+import '../../ui/pages/canvas.js';
 
 FlowRouter.route('/', {
    name: 'Landing',

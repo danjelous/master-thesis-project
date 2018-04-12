@@ -1,5 +1,5 @@
-import { FlowRouter } from 'meteor/kadira:flow-router';
 import { DefinedRoutes } from '../../startup/client/routes.js';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import './landing.html';
 
@@ -38,7 +38,7 @@ Template.Landing.events({
          }
       });
 
-      // No defined space found
+      // No defined space found, show error message
       $('.connect-private__alert').removeClass('hidden');
       $('.connect-private__space-id').focus();
    }

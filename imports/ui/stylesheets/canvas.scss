@@ -1,0 +1,11 @@
+.canvas__container {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   .canvas__area {
+      width: 800px;
+      height: 600px;
+      background: white;
+   }
+}
