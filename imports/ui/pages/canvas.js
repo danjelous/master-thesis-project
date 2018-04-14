@@ -29,7 +29,6 @@ Template.Canvas.onRendered(() => {
    const cursor = Events.find({});
    const handle = cursor.observeChanges({
       added(id) {
-         console.log('added' + id);
          paintCanvas();
       },
 
@@ -45,11 +44,8 @@ Template.Canvas.events({
    },
    'click .canvas__area': (e) => {
 
-      if (chosenShape === '') {
-         $('.alert--no-shape').removeClass('hidden');
-         $('.control-panel__shape').focus();
-         return;
-      }
+      // Check if a shape is chosen
+      if (!isShapeChosen()) return;
 
       /**
        * Override pixel based to relative coordinates (responsiveness).
@@ -59,11 +55,7 @@ Template.Canvas.events({
       e.pageY = e.offsetY / canvas.height;
 
       // Add additional event params (shape, color etc.)
-      e.eventParams = {
-         'shape': chosenShape,
-         'stroke': $('.control-panel__stroke select').val(),
-         'color': $('.control-panel__color input').val()
-      };
+      e = addCustomEventParams(e);
 
       Events.insertClick(e, Session.get('userId'));
    },
@@ -93,14 +85,26 @@ Template.Canvas.helpers({
    templateGestures: {
       'tap .canvas__area': (e) => {
 
-         /** Hammer delivers absolute coordinates > subtract offset from
-          * canvas and transform to relative coords. */
+         // Check if a shape is chosen
+         if (!isShapeChosen()) return;
+
+         console.log(e.center);
+
+         /** Hammer delivers absolute coordinates on the current screen (ignores scrollPos).
+          * So a) subtract the offset from the canvas b) transform it to relative
+          * coordinates and c) take eventual scrolling into account. */
          let relX = e.center.x -= $(canvas).offset().left;
          let relY = e.center.y -= $(canvas).offset().top;
+
+         // c)
+         relY += window.scrollY;
 
          // Transform to canvas relative coords
          e.center.x = relX / canvas.width;
          e.center.y = relY / canvas.height;
+
+         // Add additional event params (shape, color etc.)
+         e = addCustomEventParams(e);
 
          Events.insertTap(e, Session.get('userId'));
       }
@@ -147,12 +151,35 @@ paintCanvas = () => {
             smallestCanvasDimension * DRAW_ITEM_SIZE * 2);
       }
 
+      // Check if color is present
+      const color = (!elem.event.params.color) ? '#000000' : elem.event.params.color;
+
       context.lineWidth = elem.event.params.stroke;
-      context.strokeStyle = elem.event.params.color;
+      context.strokeStyle = color;
       context.stroke();
    });
 }
 
 clearCanvas = () => {
    context.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+isShapeChosen = () => {
+   if (chosenShape === '') {
+      $('.alert--no-shape').removeClass('hidden');
+      $('.control-panel__shape').focus();
+      return false;
+   } else {
+      return true;
+   }
+}
+
+addCustomEventParams = e => {
+   e.eventParams = {
+      'shape': chosenShape,
+      'stroke': $('.control-panel__stroke select').val(),
+      'color': $('.control-panel__color input').val()
+   };
+
+   return e;
 }
