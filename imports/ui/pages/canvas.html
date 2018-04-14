@@ -1,7 +1,7 @@
 <template name="Canvas">
    <div class="container">
       <h1>Draw some stuff:</h1>
-
+      <button class="btn btn-info btn--clear">Clear Canvas</button>
       <div class="canvas__container">
          {{#HammerTouchArea gestureMap=templateGestures}}
             <canvas class="canvas__area" width="800" height="600"></canvas>
