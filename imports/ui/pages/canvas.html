@@ -1,12 +1,51 @@
 <template name="Canvas">
    <div class="container">
       <h1>Draw some stuff:</h1>
-      <button class="btn btn-info btn--clear">Clear Canvas</button>
-      <div class="canvas__container">
-         {{#HammerTouchArea gestureMap=templateGestures}}
-            <canvas class="canvas__area"></canvas>
-         {{/HammerTouchArea}}
+      <div class="row">
+         <div class="col-md-2">
+            <div class="control-panel">
+
+               <button class="btn btn-info btn-lg btn--clear-canvas">Clear Canvas</button>
+
+               <div class="control-panel__shape">
+                  <h3 class="control-panel__label">Shape:</h3>
+                  <svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                     <rect x="8" y="8" width="35" height="35" stroke="white" ry="2" fill="transparent" stroke-width="5" />
+                  </svg>
+                  <svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                     <circle cx="25" cy="25" r="18" stroke="white" fill="transparent" stroke-width="5" />
+                  </svg>
+               </div>
+
+               <div class="control-panel__stroke">
+                  <h3>Stroke:</h3>
+                  <select name="stroke" class="form-control">
+                     <option value="2">2px</option>
+                     <option value="5">5px</option>
+                     <option value="7">7px</option>
+                     <option value="10">10px</option>
+                  </select>
+               </div>
+
+               <div class="control-panel__color">
+                  <h3>Color:</h3>
+                  <input type="color" class="form-control">
+               </div>
+            </div>
+
+            <div class="alert alert-danger alert--no-shape hidden">
+               <strong>Error!</strong>
+               <br> Please choose a shape!
+            </div>
+
+         </div>
+         <div class="col-md-10 canvas__container flex-center">
+            {{#HammerTouchArea gestureMap=templateGestures}}
+               <canvas class="canvas__area"></canvas>
+            {{/HammerTouchArea}}
+         </div>
       </div>
+
 
    </div>
 </template>

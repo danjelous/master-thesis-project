@@ -3,9 +3,10 @@ import { Events } from '../../api/events/events.js';
 
 import './canvas.html';
 
-// Canvas and context
+// Helpers for drawing
 let canvas;
 let context;
+let chosenShape = '';
 
 Template.Canvas.onRendered(() => {
 
@@ -34,10 +35,17 @@ Template.Canvas.onRendered(() => {
 });
 
 Template.Canvas.events({
-   'click .btn--clear': () => {
+   'click .btn--clear-canvas': () => {
       Events.clearAll();
    },
    'click .canvas__area': (e) => {
+
+      if (chosenShape === '') {
+         $('.alert--no-shape').removeClass('hidden');
+         $('.control-panel__shape').focus();
+         return;
+      }
+
 
       /**
        * Override pixel based to relative coordinates (responsiveness).
@@ -47,6 +55,26 @@ Template.Canvas.events({
       e.pageY = e.offsetY / canvas.height;
 
       Events.insertClick(e, Session.get('userId'));
+   },
+   'click .control-panel svg': (e) => {
+
+      // Reset visuals
+      $.each($('.control-panel svg'), (index, elem) => {
+         $(elem).attr('class', '');
+      });
+
+      // Hide possible error message
+      $('.alert--no-shape').addClass('hidden');
+
+      // Handle event
+      if (e.target.nodeName === 'svg') {
+         // Click on <svg>
+         chosenShape = e.target.children[0].nodeName;
+         $(e.target).attr('class', 'shape--highlight');
+      } else {
+         chosenShape = (e.target.name === 'circle') ? 'circle' : 'rect';
+         $(e.target).parent().attr('class', 'shape--highlight');
+      }
    }
 });
 

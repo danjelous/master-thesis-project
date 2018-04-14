@@ -1,9 +1,52 @@
-.canvas__container {
+.control-panel {
    display: flex;
+   justify-content: space-between;
    align-items: center;
-   justify-content: center;
+   width: 100%;
+   text-align: center;
+   margin-bottom: 2rem;
 
+   @media (min-width: 1000px) {
+      display: block;
+      text-align: left;
+   }
+
+   .control-panel__shape svg {
+      margin-right: 10px;
+      cursor: pointer;
+      padding: 2px;
+      border-radius: 10%;
+      border: 3px solid transparent;
+   }
+
+   .form-control {
+      min-width: 100px;
+      height: 40px;
+      font-size: 1.8rem;
+   }
+}
+
+.canvas__container {
    .canvas__area {
       background: white;
    }
+}
+
+.flex-center {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.flex {
+   display: flex;
+}
+
+.flex-column {
+   display: flex;
+   flex-direction: column;
+}
+
+.shape--highlight {
+   border: 3px solid green !important;
 }
