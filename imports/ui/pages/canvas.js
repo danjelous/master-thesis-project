@@ -8,6 +8,11 @@ let canvas;
 let context;
 let chosenShape = '';
 
+/** Percentage based sizes (0 to 1) of drawn squares/circles
+ * in relation to the smallest canvas dimension.
+ * E.g. in a 200x300 canvas the size would be 200xDRAW_ITEM_SIZE.*/
+const DRAW_ITEM_SIZE = 0.06;
+
 Template.Canvas.onRendered(() => {
 
    // Subscribe to specific events
@@ -46,13 +51,19 @@ Template.Canvas.events({
          return;
       }
 
-
       /**
        * Override pixel based to relative coordinates (responsiveness).
        * So on a 400x400px canvas a click on 200|200 (offsetX|offsetY)
        * gets transformed to 0.5x0.5 */
       e.pageX = e.offsetX / canvas.width;
       e.pageY = e.offsetY / canvas.height;
+
+      // Add additional event params (shape, color etc.)
+      e.eventParams = {
+         'shape': chosenShape,
+         'stroke': $('.control-panel__stroke select').val(),
+         'color': $('.control-panel__color input').val()
+      };
 
       Events.insertClick(e, Session.get('userId'));
    },
@@ -72,7 +83,7 @@ Template.Canvas.events({
          chosenShape = e.target.children[0].nodeName;
          $(e.target).attr('class', 'shape--highlight');
       } else {
-         chosenShape = (e.target.name === 'circle') ? 'circle' : 'rect';
+         chosenShape = (e.target.nodeName === 'circle') ? 'circle' : 'rect';
          $(e.target).parent().attr('class', 'shape--highlight');
       }
    }
@@ -117,10 +128,27 @@ paintCanvas = () => {
    clearCanvas();
    const elems = Events.find({});
    elems.forEach(elem => {
-      context.beginPath();
 
-      // Transform relative coordinates (0 to 1) to actual pixels
-      context.arc(elem.event.x * canvas.width, elem.event.y * canvas.height, 40, 0, 2 * Math.PI);
+      const smallestCanvasDimension =
+         (canvas.width > canvas.height) ? canvas.height : canvas.width;
+
+      context.beginPath();
+      if (elem.event.params.shape === 'circle') {
+         // Transform relative coordinates (0 to 1) to actual pixels
+         context.arc(
+            elem.event.x * canvas.width,
+            elem.event.y * canvas.height,
+            smallestCanvasDimension * DRAW_ITEM_SIZE, 0, 2 * Math.PI);
+      } else {
+         context.rect(
+            elem.event.x * canvas.width,
+            elem.event.y * canvas.height,
+            smallestCanvasDimension * DRAW_ITEM_SIZE * 2,
+            smallestCanvasDimension * DRAW_ITEM_SIZE * 2);
+      }
+
+      context.lineWidth = elem.event.params.stroke;
+      context.strokeStyle = elem.event.params.color;
       context.stroke();
    });
 }

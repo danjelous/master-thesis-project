@@ -28,8 +28,8 @@ Events.insertClick = (e, userId) => {
       'event': {
          'x': e.pageX,
          'y': e.pageY,
+         'params': e.eventParams
       },
-      'params': e.params
    });
 }
 
@@ -51,8 +51,8 @@ Events.insertTap = (e, userId) => {
       'event': {
          'x': e.center.x,
          'y': e.center.y,
+         'params': e.eventParams
       },
-      'params': e.params
    });
 }
 
