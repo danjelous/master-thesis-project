@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
+import { Events } from '../../api/events/events.js';
 
 Meteor.startup(() => {
-   Meteor.call('clearCollections');
+   Events.clearAll();
 });

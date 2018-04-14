@@ -19,7 +19,7 @@ Template.Events_List.events({
       Events.insertClick(e, Session.get('userId'));
    },
    'click .btn--clear': () => {
-      Meteor.call('clearCollections');
+      Events.clearAll();
    }
 });
 
@@ -29,7 +29,7 @@ Template.Events_List.helpers({
          Events.insertTap(e, Session.get('userId'));
       },
       'tap .btn--clear': () => {
-         Meteor.call('clearCollections');
+         Events.clearAll();
       },
       'swipeleft *, swiperight *': (e) => {
          Events.insertSwipe(e, Session.get('userId'));

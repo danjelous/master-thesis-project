@@ -1,3 +1,5 @@
+import { Meteor } from 'meteor/meteor';
+
 const Events = new Mongo.Collection('all-events');
 
 // Helper variables to store states
@@ -126,6 +128,10 @@ Events.insertPress = (e, userId) => {
          'y': e.center.y,
       }
    });
+}
+
+Events.clearAll = () => {
+   Meteor.call('clearCollections');
 }
 
 /**

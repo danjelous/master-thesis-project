@@ -3,7 +3,9 @@
       <h1>Draw some stuff:</h1>
 
       <div class="canvas__container">
-         <canvas class="canvas__area"></canvas>
+         {{#HammerTouchArea gestureMap=templateGestures}}
+            <canvas class="canvas__area" width="800" height="600"></canvas>
+         {{/HammerTouchArea}}
       </div>
 
    </div>
