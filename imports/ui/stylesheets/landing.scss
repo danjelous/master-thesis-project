@@ -1,18 +1,41 @@
 h1.landing {
-   margin-top: 10rem;
-   margin-bottom: 10rem;
+   @media (min-width: 750px) {
+      margin-top: 10rem;
+      margin-bottom: 10rem;
+   }
 }
 
 h2.landing {
-   margin-top: 5rem;
+   margin-top: 2.5rem;
+
+   @media (min-width: 750px) {
+      margin-top: 5rem;
+   }
 }
 
 .connect {
-   margin-top: 5rem;
+   margin-top: 2.5rem;
 
-   h3 {
+   @media (min-width: 750px) {
+      margin-top: 5rem;
+   }
+
+   .connect__label {
       margin-top: 10px;
-      text-align: right;
+      text-align: center;
+
+      @media (min-width: 750px) {
+         text-align: right;
+      }
+   }
+
+   .btn__holder {
+      text-align: center;
+      margin-top: 15px;
+
+      @media (min-width: 750px) {
+         margin-top: 0;
+      }
    }
 }
 
@@ -22,8 +45,12 @@ h2.landing {
    font-size: 20px;
 }
 
-.connect-private__alert {
-   margin-top: 1rem;
+.connect-private {
+   margin-bottom: 10rem;
+
+   .connect-private__alert {
+      margin-top: 1rem;
+   }
 }
 
 .btn:focus {

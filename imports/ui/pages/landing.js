@@ -27,14 +27,14 @@ Template.Landing.events({
    'click .connect-private__button': (e) => {
       if ($(e.target).hasClass('disabled')) return;
 
-      const targetSpace = $('.connect-private__space-id');
+      const targetSpace = $('.connect-private__space-id').val().toLowerCase();
 
       // Check if the space exists
       DefinedRoutes.forEach(route => {
-         if (route === `/${targetSpace.val()}`) {
+         if (route === `/${targetSpace}`) {
 
             // Forward to the space
-            FlowRouter.go(`/${targetSpace.val()}`);
+            FlowRouter.go(`/${targetSpace}`);
          }
       });
 

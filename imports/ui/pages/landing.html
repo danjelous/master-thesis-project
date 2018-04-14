@@ -2,16 +2,16 @@
    <div class="container">
       <h1 class="text-center landing">Middleware Client</h1>
       <div class="row connect connect-public">
-         <div class="col-md-6">
-            <h3>Connect to a public visualisation</h3>
+         <div class="col-sm-6">
+            <h3 class="connect__label">Connect to a public visualisation</h3>
          </div>
-         <div class="col-md-4">
+         <div class="col-sm-4">
             <select class="form-control connect-public__options">
                <option value=""></option>
                <option value="events-list">Events List</option>
             </select>
          </div>
-         <div class="col-md-2">
+         <div class="col-sm-2 btn__holder">
             <button class="disabled btn btn-primary btn-outline btn-lg connect-public__button">Connect</button>
          </div>
       </div>
@@ -19,17 +19,17 @@
       <h2 class="text-center landing">OR</h2>
 
       <div class="row connect connect-private">
-         <div class="col-md-6">
-            <h3>Connect to a private visualisation</h3>
+         <div class="col-sm-6">
+            <h3 class="connect__label">Connect to a private visualisation</h3>
          </div>
-         <div class="col-md-4">
+         <div class="col-sm-4">
             <input type="text" class="form-control connect-private__space-id" placeholder="SpaceID" />
             <div class="alert alert-danger connect-private__alert hidden">
                <strong>Error!</strong>
                <br> The chosen SpaceID does not exist!
             </div>
          </div>
-         <div class="col-md-2">
+         <div class="col-sm-2 btn__holder">
             <button class="disabled btn btn-primary btn-lg connect-private__button">Connect</button>
          </div>
       </div>
