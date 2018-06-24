@@ -1,12 +1,6 @@
-import {
-  Meteor
-} from 'meteor/meteor';
-import {
-  Session
-} from 'meteor/session';
-import {
-  Events
-} from '../../api/events/events.js';
+import { Meteor } from 'meteor/meteor';
+import { Session } from 'meteor/session';
+import { Events } from '../../api/events/events.js';
 
 import './events-list.html';
 
@@ -63,7 +57,10 @@ Template.Events_List.helpers({
   },
   getEventData: (event) => {
     if (event.type === 'tap' || event.type === 'click' || event.type === 'press') {
-      return `on (${event.event.x.toFixed(2)}|${event.event.y.toFixed(2)})`;
+      const pos = `on (${event.event.x.toFixed(2)}|${event.event.y.toFixed(2)}).<br>`;
+      const inserted = `Inserted: ${formatTimeStamp(event.timestamp)}<br>`;
+      const received = `Received: ${formatTimeStamp(new Date())}`;
+      return pos + inserted + received;
     } else if (event.type.indexOf('swipe') > -1) {
       return `on <span class="code">${event.event.target}</span>`;
     } else if (event.type.indexOf('pan') > -1) {
@@ -77,3 +74,22 @@ Template.Events_List.helpers({
     return Session.get('userId');
   }
 });
+
+function formatMilliSeconds(ms) {
+  if (ms < 10) {
+    return `00${ms}`;
+  } else if (ms < 100) {
+    return `0${ms}`;
+  }
+  return ms;
+}
+
+function padZero(time) {
+  return time < 10 ? '0' + time : '' + time;
+}
+
+function formatTimeStamp(timestamp) {
+  const hm = `${timestamp.getHours()}:${padZero(timestamp.getMinutes())}:`;
+  const sms = `${padZero(timestamp.getSeconds())}.${formatMilliSeconds(timestamp.getMilliseconds())}`;
+  return hm + sms;
+}

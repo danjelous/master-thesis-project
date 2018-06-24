@@ -16,14 +16,14 @@
             </div>
 
             <div class="col-md-4">
-               <h4>My ClickEvents</h4>
+               <h4>My Events</h4>
                {{#each myEvents}}
                   <h5>I made a {{ type }} {{{ getEventData(this) }}}</h5>
                {{/each}}
             </div>
 
             <div class="col-md-4">
-               <h4>Other User's ClickEvents</h4>
+               <h4>Other User's Events</h4>
                {{#each othersEvents}}
                   <h5>User {{ origin }} made a {{ type }} {{{ getEventData(this) }}}</h5>
                {{/each}}

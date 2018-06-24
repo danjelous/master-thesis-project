@@ -29,6 +29,7 @@ Events.insertClick = (e, userId) => {
       'y': e.pageY,
       'params': e.eventParams
     },
+    'timestamp': new Date(),
   });
 }
 
