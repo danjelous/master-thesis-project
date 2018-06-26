@@ -29,7 +29,7 @@ Events.insertClick = (e, userId) => {
       'y': e.pageY,
       'params': e.eventParams
     },
-    'timestamp': new Date(),
+    'timestamp': Date.now(),
   });
 }
 
@@ -53,6 +53,7 @@ Events.insertTap = (e, userId) => {
       'y': e.center.y,
       'params': e.eventParams
     },
+    'timestamp': Date.now(),
   });
 }
 

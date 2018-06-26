@@ -1,4 +1,3 @@
-import { Meteor } from 'meteor/meteor';
 import { Session } from 'meteor/session';
 import { Events } from '../../api/events/events.js';
 
@@ -59,7 +58,7 @@ Template.Events_List.helpers({
     if (event.type === 'tap' || event.type === 'click' || event.type === 'press') {
       const pos = `on (${event.event.x.toFixed(2)}|${event.event.y.toFixed(2)}).<br>`;
       const inserted = `Inserted: ${formatTimeStamp(event.timestamp)}<br>`;
-      const received = `Received: ${formatTimeStamp(new Date())}`;
+      const received = `Received: ${formatTimeStamp(Date.now())}`;
       return pos + inserted + received;
     } else if (event.type.indexOf('swipe') > -1) {
       return `on <span class="code">${event.event.target}</span>`;
@@ -75,21 +74,15 @@ Template.Events_List.helpers({
   }
 });
 
-function formatMilliSeconds(ms) {
-  if (ms < 10) {
-    return `00${ms}`;
-  } else if (ms < 100) {
-    return `0${ms}`;
-  }
-  return ms;
-}
+function formatTimeStamp(duration) {
+  const milliseconds = parseInt((duration % 1000));
+  let seconds = parseInt((duration / 1000) % 60);
+  let minutes = parseInt((duration / (1000 * 60)) % 60);
+  let hours = parseInt((duration / (1000 * 60 * 60)) % 24);
 
-function padZero(time) {
-  return time < 10 ? '0' + time : '' + time;
-}
+  hours = (hours < 10) ? `0${hours}` : hours;
+  minutes = (minutes < 10) ? `0${minutes}` : minutes;
+  seconds = (seconds < 10) ? `0${seconds}` : seconds;
 
-function formatTimeStamp(timestamp) {
-  const hm = `${timestamp.getHours()}:${padZero(timestamp.getMinutes())}:`;
-  const sms = `${padZero(timestamp.getSeconds())}.${formatMilliSeconds(timestamp.getMilliseconds())}`;
-  return hm + sms;
+  return `${hours}:${minutes}:${seconds}.${milliseconds}`;
 }
