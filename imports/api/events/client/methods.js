@@ -14,7 +14,10 @@ Events.subscribe = args => {
   });
 }
 
-// Same usage as .subscribe
+/**
+ *  Same usage as .subscribe
+ * Events.clear('swipe click press')
+ */
 Events.clear = args => {
   let collections = args.split(' ');
   collections.forEach(coll => {
